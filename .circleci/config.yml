@@ -2,12 +2,19 @@ version: 2.1
 executors:
   ci-executor:
     docker:
-      - image: githubtraining/ci-custom:latest
+      - image: circleci/ruby:2.6.0-node
 jobs:
   build:
     executor: ci-executor
     steps:
       - checkout
+      
+      - run:
+          name: install dependencies
+          command: |
+            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+            source $BASH_ENV
+            gem install bundler
 
       - run:
           name: build dependencies
